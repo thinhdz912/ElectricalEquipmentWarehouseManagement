@@ -23,7 +23,7 @@ public class AuthController {
     private final IAuthenticatedServices authenticatedServices;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenDTO dto) {
+    public ResponseEntity<Object> login(@RequestBody AuthenDTO dto) {
         try {
             return new ResponseEntity<>(
                     authenticatedServices.login(dto),
@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO dto) {
+    public ResponseEntity<Object> register(@RequestBody RegisterDTO dto) {
         try {
             authenticatedServices.register(dto);
             return ResponseEntity.ok(Map.of("message", "Register successful"));

@@ -12,9 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-public class AuthenticatedServiceImpl {
-    @RequiredArgsConstructor
-    @Service
+@RequiredArgsConstructor
+@Service
     public class AuthenticatedServicesImpl implements IAuthenticatedServices {
         private final AccountRepository accountRepo;
         private final PasswordEncoder passwordEncoder;
@@ -62,4 +61,4 @@ public class AuthenticatedServiceImpl {
         }
     }
 
-}
+
