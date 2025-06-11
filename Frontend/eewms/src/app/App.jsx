@@ -1,26 +1,14 @@
-import { useRoutes } from "react-router-dom";
-import CssBaseline from "@mui/material/CssBaseline";
-// ROOT THEME PROVIDER
-import { MatxTheme } from "./components";
-// ALL CONTEXTS
-import SettingsProvider from "./contexts/SettingsContext";
-import { AuthProvider } from "./contexts/FirebaseAuthContext";
-// ROUTES
-import routes from "./routes";
-// FAKE SERVER
-import "../__api__";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./features/auth/login/LoginPage";
 
-export default function App() {
-  const content = useRoutes(routes);
-
+const App = () => {
   return (
-    <SettingsProvider>
-      <AuthProvider>
-        <MatxTheme>
-          <CssBaseline />
-          {content}
-        </MatxTheme>
-      </AuthProvider>
-    </SettingsProvider>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
-}
+};
+
+export default App;
