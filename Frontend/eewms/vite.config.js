@@ -14,14 +14,14 @@ export default defineConfig({
     })
   ],
   server: {
-    port: 3000,
+    port: 3000
   },
   build: {
     chunkSizeWarningLimit: 2000
   },
   resolve: {
     alias: {
-      app: path.resolve(__dirname, "src/app")
+      app_develop: "/src/app_develop"
     }
   }
 });

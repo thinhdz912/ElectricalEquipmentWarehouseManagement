@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 // ROOT APP COMPONENT
-import App from "./app/App";
+import App from "./app_develop/App";
 // THIRD PARTY CSS
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
