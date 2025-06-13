@@ -1,63 +1,75 @@
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import Toolbar from "@mui/material/Toolbar";
-import { ThemeProvider, styled, useTheme } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import { Typography } from "@material-tailwind/react";
+import { HeartIcon } from "@heroicons/react/24/solid";
 
-import { Paragraph, Span } from "./Typography";
-import useSettings from "app/hooks/useSettings";
-import { topBarHeight } from "app/utils/constant";
-
-// STYLED COMPONENTS
-const AppFooter = styled(Toolbar)(() => ({
-  display: "flex",
-  alignItems: "center",
-  minHeight: topBarHeight,
-  "@media (max-width: 499px)": {
-    display: "table",
-    width: "100%",
-    minHeight: "auto",
-    padding: "1rem 0",
-    "& .container": {
-      flexDirection: "column !important",
-      "& a": { margin: "0 0 16px !important" }
-    }
-  }
-}));
-
-const FooterContent = styled("div")(() => ({
-  width: "100%",
-  display: "flex",
-  alignItems: "center",
-  padding: "0px 1rem",
-  maxWidth: "1170px",
-  margin: "0 auto"
-}));
-
-export default function Footer() {
-  const theme = useTheme();
-  const { settings } = useSettings();
-
-  const footerTheme = settings.themes[settings.footer.theme] || theme;
+export function Footer({ brandName, brandLink, routes }) {
+  const year = new Date().getFullYear();
 
   return (
-    <ThemeProvider theme={footerTheme}>
-      <AppBar color="primary" position="static" sx={{ zIndex: 96 }}>
-        <AppFooter>
-          <FooterContent>
-            <a href="https://ui-lib.com/downloads/matx-pro-react-admin/">
-              <Button variant="contained" color="secondary">
-                Get MatX Pro
-              </Button>
-            </a>
+    <footer className="py-2 bg-dark text-black text-center p-3 mt-5 bg-gray-50">
+      <div className="container flex flex-wrap items-center justify-center gap-6 px-2 md:justify-between">
+        {/* Thông tin bản quyền */}
+        <Typography variant="small" className="font-normal text-inherit">
+          &copy; {year}, made with{" "}
+          <HeartIcon className="-mt-0.5 inline-block h-3.5 w-3.5 text-red-600" /> by{" "}
+          <a
+            href={brandLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-blue-500 font-bold"
+          >
+            {brandName}
+          </a>{" "}
+          for a better web.
+        </Typography>
 
-            <Span m="auto" />
-
-            <Paragraph m={0}>
-              Design and Developed by <a href="http://ui-lib.com">UI Lib</a>
-            </Paragraph>
-          </FooterContent>
-        </AppFooter>
-      </AppBar>
-    </ThemeProvider>
+        {/* Danh sách link */}
+        <ul className="flex items-center gap-4">
+          {routes.map(({ name, path }) => (
+            <li key={name}>
+              <Typography
+                as="a"
+                href={path}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="small"
+                className="py-0.5 px-1 font-normal text-inherit transition-colors hover:text-blue-500"
+              >
+                {name}
+              </Typography>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </footer>
   );
 }
+
+// Giá trị mặc định nếu không truyền props
+Footer.defaultProps = {
+  brandName: "Tungtran",
+  brandLink: "https://www.facebook.com/tungdzai1204/",
+  routes: [
+    { name: "Tungtran", path: "https://www.facebook.com/tungdzai1204/" },
+    { name: "About Us", path: "https://www.facebook.com/tungdzai1204/" },
+    { name: "Blog", path: "https://www.facebook.com/tungdzai1204/" },
+    { name: "License", path: "https://www.facebook.com/tungdzai1204/" },
+  ],
+};
+
+// Xác định kiểu dữ liệu cho props
+Footer.propTypes = {
+  brandName: PropTypes.string,
+  brandLink: PropTypes.string,
+  routes: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ),
+};
+
+// Đặt tên hiển thị trong React DevTools
+Footer.displayName = "/src/features/admin/dashboard/footer.jsx";
+
+export default Footer;

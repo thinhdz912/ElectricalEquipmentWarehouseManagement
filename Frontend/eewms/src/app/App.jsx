@@ -1,13 +1,20 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./features/auth/login/LoginPage";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import { AuthProvider } from "./context/AuthContext";
+import { MaterialTailwindControllerProvider } from "./context";
+import MainLayout from "./layouts/MainLayout";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+    <AuthProvider>
+      <MaterialTailwindControllerProvider>
+        <Router>
+          <MainLayout>
+            <AppRoutes />
+          </MainLayout>
+        </Router>
+      </MaterialTailwindControllerProvider>
+    </AuthProvider>
   );
 };
 
