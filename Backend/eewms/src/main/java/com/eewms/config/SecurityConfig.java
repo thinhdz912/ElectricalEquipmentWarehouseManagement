@@ -36,6 +36,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/settings/**").permitAll()
                         .anyRequest().authenticated()
                 );
         http.oauth2ResourceServer(oauth2 ->

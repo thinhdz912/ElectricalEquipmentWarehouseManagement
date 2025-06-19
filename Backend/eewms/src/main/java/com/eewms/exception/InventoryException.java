@@ -19,6 +19,8 @@ public class InventoryException extends Exception {
         this.codeMessage = codeMessage;
         this.message = message;
     }
+
+
     public InventoryException(String message){
         this.message = message;
     }
