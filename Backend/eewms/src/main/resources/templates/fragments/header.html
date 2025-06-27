@@ -1,0 +1,25 @@
+<!-- fragments/header.html -->
+<header class="bg-white shadow-sm p-4 flex justify-between items-center" th:fragment="header">
+    <!-- Search Bar -->
+    <div class="relative w-full max-w-md">
+        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <input type="text" placeholder="Tìm kiếm..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <!-- User Menu -->
+    <div class="flex items-center space-x-4">
+        <button class="p-2 rounded-full hover:bg-gray-100">
+            <i class="ri-notification-3-line text-xl text-gray-600"></i>
+        </button>
+        <button class="p-2 rounded-full hover:bg-gray-100">
+            <img src="https://placehold.co/32x32/e2e8f0/e2e8f0" alt="Country Flag" class="w-6 h-6 rounded-full object-cover">
+        </button>
+        <div class="flex items-center space-x-2">
+            <img src="https://placehold.co/40x40/7e22ce/ffffff?text=U" alt="User Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500">
+            <div class="hidden md:block">
+                <p class="font-semibold text-sm">Người dùng</p>
+                <p class="text-xs text-gray-500">Admin</p>
+            </div>
+        </div>
+    </div>
+</header>
