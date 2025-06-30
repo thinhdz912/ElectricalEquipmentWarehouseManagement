@@ -28,6 +28,15 @@ public class User {
 
     private String fullName;
 
+    @Column(length = 20)
+    private String phone;
+
+    @Column(length = 100)
+    private String email;
+
+    @Column(length = 255)
+    private String address;
+
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)

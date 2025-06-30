@@ -22,9 +22,12 @@ public class UserMapper {
         return User.builder()
                 .id(dto.getId())
                 .username(dto.getUsername())
-                .password(dto.getPassword()) // mã hóa sau
+                .password(dto.getPassword()) // sẽ mã hóa ở tầng service
                 .fullName(dto.getFullName())
                 .enabled(dto.isEnabled())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .address(dto.getAddress())
                 .roles(roles)
                 .build();
     }
@@ -36,7 +39,7 @@ public class UserMapper {
                 .collect(Collectors.toList());
 
         List<String> roleNames = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "")) // bỏ ROLE_ cho dễ đọc
+                .map(role -> role.getName().replace("ROLE_", "")) // dễ đọc hơn
                 .collect(Collectors.toList());
 
         return UserDTO.builder()
@@ -44,8 +47,11 @@ public class UserMapper {
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .enabled(user.isEnabled())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .address(user.getAddress())
                 .roleIds(roleIds)
-                .roleNames(roleNames) // thêm vào đây
+                .roleNames(roleNames)
                 .build();
     }
 }
