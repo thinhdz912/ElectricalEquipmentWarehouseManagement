@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryException extends Exception {
+public class InventoryException extends RuntimeException {
     private HttpStatus code;
     private String codeMessage;
     private String message;
