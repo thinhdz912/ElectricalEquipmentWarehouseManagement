@@ -1,5 +1,6 @@
 package com.eewms.dto;
 
+import com.eewms.constant.SettingType;
 import lombok.*;
 
 @Getter
@@ -8,16 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SettingDTO {
-
     private Integer id;
-
     private String name;
-
-    private Integer typeId; // Dùng enum SettingType.getValue()
-
+    private SettingType type;      // ← đổi sang enum
     private Integer priority;
-
     private String description;
-
     private String status;
 }

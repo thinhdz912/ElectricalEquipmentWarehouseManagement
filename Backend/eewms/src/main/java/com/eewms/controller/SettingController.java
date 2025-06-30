@@ -1,11 +1,11 @@
 package com.eewms.controller;
 
+import com.eewms.constant.SettingType;
 import com.eewms.dto.SettingDTO;
 import com.eewms.exception.InventoryException;
-import com.eewms.services.ISettingServicesImpl;
+import com.eewms.services.ISettingServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,68 +15,65 @@ import java.util.Map;
 @RequestMapping("/api/settings")
 @RequiredArgsConstructor
 public class SettingController {
+    private final ISettingServices settingService;
 
-    private final ISettingServicesImpl settingService;
-
+    // Tạo mới → POST /api/settings
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody SettingDTO dto) {
+    public ResponseEntity<?> create(@RequestBody SettingDTO dto) {
         try {
-            return new ResponseEntity<>(
-                    settingService.create(dto),
-                    HttpStatus.OK
-            );
+            SettingDTO created = settingService.create(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (InventoryException ex) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", ex.getMessage()));
         }
     }
 
+    // Cập nhật → PUT /api/settings/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody SettingDTO dto) {
+    public ResponseEntity<?> update(@PathVariable Integer id,
+                                    @RequestBody SettingDTO dto) {
         try {
-            return new ResponseEntity<>(
-                    settingService.update(id, dto),
-                    HttpStatus.OK
-            );
+            SettingDTO updated = settingService.update(id, dto);
+            return ResponseEntity.ok(updated);
         } catch (InventoryException ex) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", ex.getMessage()));
         }
     }
 
+    // Xóa → DELETE /api/settings/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         try {
             settingService.delete(id);
-            return ResponseEntity.ok(Map.of("message", "Xoá thành công"));
+            return ResponseEntity.ok(Map.of("message", "Xóa thành công"));
         } catch (InventoryException ex) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", ex.getMessage()));
         }
     }
 
+    // Lấy theo ID → GET /api/settings/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Integer id) {
+    public ResponseEntity<?> getById(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<>(
-                    settingService.getById(id),
-                    HttpStatus.OK
-            );
+            return ResponseEntity.ok(settingService.getById(id));
         } catch (InventoryException ex) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", ex.getMessage()));
         }
     }
+
+    // Lấy tất cả → GET /api/settings
     @GetMapping
     public ResponseEntity<List<SettingDTO>> getAll() {
-        List<SettingDTO> list = settingService.getAll();
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(settingService.getAll());
     }
 
-    @GetMapping("/type/{typeId}")
-    public ResponseEntity<List<SettingDTO>> getByTypeId(@PathVariable Integer typeId) {
-        List<SettingDTO> list = settingService.getByTypeId(typeId);
-        return ResponseEntity.ok(list);
+    // Lấy theo type → GET /api/settings/type/{type}
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<SettingDTO>> getByType(@PathVariable SettingType type) {
+        return ResponseEntity.ok(settingService.getByType(type));
     }
-
 }
