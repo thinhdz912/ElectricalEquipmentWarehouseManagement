@@ -32,15 +32,14 @@ public class UserMapper {
                 .build();
     }
 
-    // Entity → DTO (hiển thị form hoặc bảng)
     public static UserDTO toDTO(User user) {
-        List<Long> roleIds = user.getRoles().stream()
-                .map(Role::getId)
-                .collect(Collectors.toList());
+        List<Long> roleIds = user.getRoles() != null
+                ? user.getRoles().stream().map(Role::getId).collect(Collectors.toList())
+                : List.of();
 
-        List<String> roleNames = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "")) // dễ đọc hơn
-                .collect(Collectors.toList());
+        List<String> roleNames = user.getRoles() != null
+                ? user.getRoles().stream().map(role -> role.getName().replace("ROLE_", "")).collect(Collectors.toList())
+                : List.of();
 
         return UserDTO.builder()
                 .id(user.getId())

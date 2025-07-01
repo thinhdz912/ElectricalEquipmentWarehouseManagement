@@ -80,9 +80,13 @@
                         <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
                     </button>
                     <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-md z-50 hidden">
-                        <a th:href="@{/account/info}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="ri-user-line mr-2"></i> Thông tin tài khoản</a>
+                        <a th:href="@{/account/info}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="ri-user-line mr-2"></i> Thông tin tài khoản
+                        </a>
                         <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="ri-logout-box-r-line mr-2"></i> Đăng xuất</button>
+                            <button type="submit" class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="ri-logout-box-r-line mr-2"></i> Đăng xuất
+                            </button>
                         </form>
                     </div>
                 </div>

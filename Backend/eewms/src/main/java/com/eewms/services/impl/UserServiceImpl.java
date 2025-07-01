@@ -86,4 +86,22 @@ public class UserServiceImpl implements IUserService {
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    @Override
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu cũ không đúng");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPassword);
+        userRepository.save(user);
+    }
 }
