@@ -23,4 +23,7 @@ public interface IUserService {
     boolean existsByUsername(String username);
 
     List<Role> getAllRoles();
+    Optional<User> findByUsername(String username);
+
+    void changePassword(String username, String oldPassword, String newPassword);
 }

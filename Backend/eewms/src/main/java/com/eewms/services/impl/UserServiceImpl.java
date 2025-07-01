@@ -47,6 +47,11 @@ public class UserServiceImpl implements IUserService {
         existingUser.setEnabled(updatedUser.isEnabled());
         existingUser.setRoles(updatedUser.getRoles());
 
+        // Thêm cập nhật các trường mới
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setAddress(updatedUser.getAddress());
+
         // Nếu mật khẩu được nhập mới thì cập nhật
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
             String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
@@ -68,7 +73,6 @@ public class UserServiceImpl implements IUserService {
     public void toggleEnabledStatus(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
-
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
     }
@@ -81,5 +85,23 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    @Override
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu cũ không đúng");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPassword);
+        userRepository.save(user);
     }
 }
