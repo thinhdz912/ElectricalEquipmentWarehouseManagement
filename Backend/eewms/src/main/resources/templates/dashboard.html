@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dashboard</title>
-    <meta charset="UTF-8">
-
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Thiết bị điện Hải Phòng</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <style>
-        /* Custom font */
         @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
         }
-        /* Custom scrollbar for better UX */
         .sidebar-nav::-webkit-scrollbar {
             width: 4px;
         }
@@ -26,7 +22,6 @@
             border-radius: 20px;
         }
     </style>
-
 </head>
 <body class="bg-gray-100">
 <div class="flex h-screen">
@@ -48,74 +43,45 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6">
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-blue-100 p-3 rounded-lg"><i class="ri-group-line text-2xl text-blue-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Khách hàng</p>
-                        <p class="text-2xl font-bold">558</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Khách hàng</p><p class="text-2xl font-bold">558</p></div>
                 </div>
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-green-100 p-3 rounded-lg"><i class="ri-wallet-3-line text-2xl text-green-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Chi phí TB</p>
-                        <p class="text-2xl font-bold">2,164K</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Chi phí TB</p><p class="text-2xl font-bold">2,164K</p></div>
                 </div>
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-yellow-100 p-3 rounded-lg"><i class="ri-user-star-line text-2xl text-yellow-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Nhân viên</p>
-                        <p class="text-2xl font-bold">112</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Nhân viên</p><p class="text-2xl font-bold">112</p></div>
                 </div>
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-purple-100 p-3 rounded-lg"><i class="ri-truck-line text-2xl text-purple-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Phương tiện</p>
-                        <p class="text-2xl font-bold">16</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Phương tiện</p><p class="text-2xl font-bold">16</p></div>
                 </div>
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-red-100 p-3 rounded-lg"><i class="ri-calendar-check-line text-2xl text-red-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Cuộc hẹn</p>
-                        <p class="text-2xl font-bold">220</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Cuộc hẹn</p><p class="text-2xl font-bold">220</p></div>
                 </div>
                 <div class="bg-white p-5 rounded-lg shadow flex items-center space-x-4">
                     <div class="bg-indigo-100 p-3 rounded-lg"><i class="ri-compass-3-line text-2xl text-indigo-600"></i></div>
-                    <div>
-                        <p class="text-sm text-gray-500">Vận hành</p>
-                        <p class="text-2xl font-bold">10</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Vận hành</p><p class="text-2xl font-bold">10</p></div>
                 </div>
             </div>
 
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Bar Chart -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-bold text-lg text-gray-700">Khách hàng theo Giới tính</h2>
-                        <select class="border rounded-md px-3 py-1 text-sm">
-                            <option>2024</option>
-                            <option>2023</option>
-                        </select>
+                        <select class="border rounded-md px-3 py-1 text-sm"><option>2024</option><option>2023</option></select>
                     </div>
-                    <!-- Placeholder for chart -->
                     <img src="https://placehold.co/600x300/f1f5f9/a0aec0?text=Bar+Chart+Placeholder" alt="Bar chart" class="w-full h-auto rounded-md">
                 </div>
 
-                <!-- Doughnut Chart -->
                 <div class="bg-white p-6 rounded-lg shadow">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="font-bold text-lg text-gray-700">Khách hàng theo Bộ phận</h2>
-                        <select class="border rounded-md px-3 py-1 text-sm">
-                            <option>Hôm nay</option>
-                            <option>Tuần này</option>
-                            <option>Tháng này</option>
-                        </select>
+                        <select class="border rounded-md px-3 py-1 text-sm"><option>Hôm nay</option><option>Tuần này</option><option>Tháng này</option></select>
                     </div>
-                    <!-- Placeholder for chart -->
                     <img src="https://placehold.co/300x300/f1f5f9/a0aec0?text=Donut+Chart+Placeholder" alt="Doughnut chart" class="w-full h-auto rounded-md">
                 </div>
             </div>
