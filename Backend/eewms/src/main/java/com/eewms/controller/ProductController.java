@@ -5,6 +5,7 @@ import com.eewms.dto.ProductDetailsDTO;
 import com.eewms.constant.SettingType;
 import com.eewms.exception.InventoryException;
 import com.eewms.services.IProductServices;
+import com.eewms.services.ISettingServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,20 +20,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductServices productService;
-
+    private final ISettingServices settingService;
     @GetMapping
     public String list(Model model) throws InventoryException {
         model.addAttribute("products", productService.getAll());
+        model.addAttribute("productDTO", new ProductFormDTO());
+        model.addAttribute("units",      settingService.getByType(SettingType.UNIT));
+        model.addAttribute("brands",     settingService.getByType(SettingType.BRAND));
+        model.addAttribute("categories", settingService.getByType(SettingType.CATEGORY));
         return "product-list";
     }
 
-    @GetMapping("/create")
-    public String createForm(Model model) {
-        model.addAttribute("productForm", new ProductFormDTO());
-        model.addAttribute("unitOptions", productService.getSettingOptions(SettingType.UNIT));
-        model.addAttribute("brandOptions", productService.getSettingOptions(SettingType.BRAND));
-        model.addAttribute("categoryOptions", productService.getSettingOptions(SettingType.CATEGORY));
-        return "products/form";
+    // xử lý submit modal form
+    @PostMapping
+    public String create(@ModelAttribute("productDTO") ProductFormDTO dto,
+                         RedirectAttributes ra) {
+        try {
+            productService.create(dto);
+            ra.addFlashAttribute("success", "Thêm sản phẩm thành công");
+        } catch (InventoryException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/products";
     }
 
     @PostMapping("/save")
@@ -68,4 +77,3 @@ public class ProductController {
         }
     }
 }
-

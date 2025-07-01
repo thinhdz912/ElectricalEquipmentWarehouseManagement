@@ -1,18 +1,17 @@
 package com.eewms.services.impl;
 
+import com.eewms.constant.SettingType;
 import com.eewms.dto.*;
 import com.eewms.entities.*;
 import com.eewms.exception.InventoryException;
-import com.eewms.repository.ImagesRepository;
-import com.eewms.constant.SettingType;
-import com.eewms.repository.ProductRepository;
-import com.eewms.repository.SettingRepository;
+import com.eewms.repository.*;
 import com.eewms.services.IProductServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,51 +40,53 @@ public class ProductServicesImpl implements IProductServices {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional
-    public ProductDetailsDTO create(ProductFormDTO dto) throws InventoryException {
-        if (productRepo.existsByCode(dto.getCode()))
-            throw new InventoryException("Mã sản phẩm đã tồn tại");
-        return saveOrUpdate(null, dto);
-    }
-
-    @Override
-    @Transactional
-    public ProductDetailsDTO update(Integer id, ProductFormDTO dto) throws InventoryException {
-        if (!productRepo.existsById(id))
-            throw new InventoryException("Sản phẩm không tồn tại");
-        return saveOrUpdate(id, dto);
-    }
+    // Hàm chung cho cả create và update
 
     private ProductDetailsDTO saveOrUpdate(Integer id, ProductFormDTO dto) throws InventoryException {
-        Setting u = settingRepo.findById(dto.getUnitId())
+        System.out.println(">>> saveOrUpdate called with id = " + id);
+        Product product;
+
+        if (id != null) {
+            // --- CHỈ gọi findById khi update (id != null) ---
+            product = productRepo.findById(id)
+                    .orElseThrow(() -> new InventoryException("Sản phẩm không tồn tại"));
+        } else {
+            // --- Create mới: KHÔNG được gọi findById(null) ---
+            product = new Product();
+        }
+
+        // --- Gán chung các trường từ DTO ---
+        product.setCode(dto.getCode());
+        product.setName(dto.getName());
+        product.setOriginPrice(dto.getOriginPrice());
+        product.setListingPrice(dto.getListingPrice());
+        product.setDescription(dto.getDescription());
+        product.setStatus(dto.getStatus());
+        product.setQuantity(dto.getQuantity());
+
+        // --- Lấy Setting liên quan ---
+        Setting unit = settingRepo.findById(dto.getUnitId())
                 .orElseThrow(() -> new InventoryException("Đơn vị không tồn tại"));
-        Setting c = settingRepo.findById(dto.getCategoryId())
+        Setting category = settingRepo.findById(dto.getCategoryId())
                 .orElseThrow(() -> new InventoryException("Danh mục không tồn tại"));
-        Setting b = settingRepo.findById(dto.getBrandId())
+        Setting brand = settingRepo.findById(dto.getBrandId())
                 .orElseThrow(() -> new InventoryException("Thương hiệu không tồn tại"));
+        product.setUnit(unit);
+        product.setCategory(category);
+        product.setBrand(brand);
 
-        Product p = Product.builder()
-                .id(id)
-                .code(dto.getCode())
-                .name(dto.getName())
-                .originPrice(dto.getOriginPrice())
-                .listingPrice(dto.getListingPrice())
-                .description(dto.getDescription())
-                .status(dto.getStatus())
-                .quantity(dto.getQuantity())
-                .unit(u)
-                .category(c)
-                .brand(b)
-                .build();
+        // --- Lưu product ---
+        Product saved = productRepo.save(product);
 
-        Product saved = productRepo.save(p);
+        // --- Xóa ảnh cũ và lưu ảnh mới ---
         imageRepo.deleteByProductId(saved.getId());
-        List<Image> imgs = dto.getImages()==null? List.of() : dto.getImages().stream()
+        List<Image> imgs = Optional.ofNullable(dto.getImages()).orElse(List.of())
+                .stream()
                 .map(url -> Image.builder().imageUrl(url).product(saved).build())
                 .collect(Collectors.toList());
         imageRepo.saveAll(imgs);
 
+        // --- Build và trả về DTO chi tiết ---
         return ProductDetailsDTO.builder()
                 .id(saved.getId())
                 .code(saved.getCode())
@@ -95,11 +96,32 @@ public class ProductServicesImpl implements IProductServices {
                 .description(saved.getDescription())
                 .status(saved.getStatus())
                 .quantity(saved.getQuantity())
-                .unit(mapSetting(u))
-                .category(mapSetting(c))
-                .brand(mapSetting(b))
+                .unit(mapSetting(unit))
+                .category(mapSetting(category))
+                .brand(mapSetting(brand))
                 .images(mapImages(imgs))
                 .build();
+    }
+
+
+    @Override
+    @Transactional
+    public ProductDetailsDTO create(ProductFormDTO dto) throws InventoryException {
+        // Kiểm tra mã unique
+        if (productRepo.existsByCode(dto.getCode())) {
+            throw new InventoryException("Mã sản phẩm đã tồn tại");
+        }
+        return saveOrUpdate(null, dto);
+    }
+
+    @Override
+    @Transactional
+    public ProductDetailsDTO update(Integer id, ProductFormDTO dto) throws InventoryException {
+        // Bắt buộc tồn tại trước khi update
+        if (!productRepo.existsById(id)) {
+            throw new InventoryException("Sản phẩm không tồn tại");
+        }
+        return saveOrUpdate(id, dto);
     }
 
     @Override
@@ -116,6 +138,7 @@ public class ProductServicesImpl implements IProductServices {
     public ProductDetailsDTO getById(Integer id) throws InventoryException {
         Product p = productRepo.findById(id)
                 .orElseThrow(() -> new InventoryException("Sản phẩm không tồn tại"));
+        List<Image> imgs = imageRepo.findByProductId(id);
         return ProductDetailsDTO.builder()
                 .id(p.getId())
                 .code(p.getCode())
@@ -128,7 +151,7 @@ public class ProductServicesImpl implements IProductServices {
                 .unit(mapSetting(p.getUnit()))
                 .category(mapSetting(p.getCategory()))
                 .brand(mapSetting(p.getBrand()))
-                .images(mapImages(imageRepo.findByProductId(id)))
+                .images(mapImages(imgs))
                 .build();
     }
 
@@ -137,8 +160,11 @@ public class ProductServicesImpl implements IProductServices {
     public List<ProductDetailsDTO> getAll() throws InventoryException {
         return productRepo.findAll().stream()
                 .map(p -> {
-                    try { return getById(p.getId()); }
-                    catch (InventoryException e) { throw new RuntimeException(e); }
+                    try {
+                        return getById(p.getId());
+                    } catch (InventoryException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).collect(Collectors.toList());
     }
 
