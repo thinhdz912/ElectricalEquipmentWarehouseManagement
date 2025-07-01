@@ -1,4 +1,4 @@
-package com.eewms.controllers;
+package com.eewms.controller;
 
 import com.eewms.dto.ProductFormDTO;
 import com.eewms.dto.ProductDetailsDTO;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping({"/products", "/product-list"})
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductServices productService;
@@ -20,7 +20,7 @@ public class ProductController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("products", productService.getAll());
-        return "products/list";
+        return "product-list";
     }
 
     @GetMapping("/create")

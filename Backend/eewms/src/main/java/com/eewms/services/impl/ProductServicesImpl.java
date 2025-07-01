@@ -4,7 +4,6 @@ import com.eewms.dto.*;
 import com.eewms.entities.*;
 import com.eewms.exception.InventoryException;
 import com.eewms.repository.*;
-import com.eewms.services.IProductService;
 import com.eewms.services.IProductServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
