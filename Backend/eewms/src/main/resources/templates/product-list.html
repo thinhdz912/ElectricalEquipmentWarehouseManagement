@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+<div class="flex h-screen">
+    <!-- Sidebar fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64">
+        <!-- Header fragment -->
+        <div th:replace="~{fragments/header :: header}"></div>
+
+        <!-- Page Content -->
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Danh sách sản phẩm</h1>
+
+            <div class="overflow-x-auto bg-white rounded-lg shadow">
+                <table class="min-w-full text-sm text-left text-gray-700">
+                    <thead class="bg-gray-200 text-xs uppercase font-semibold">
+                    <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Mã SP</th>
+                        <th class="px-4 py-3">Tên</th>
+                        <th class="px-4 py-3">Mô tả</th>
+                        <th class="px-4 py-3">Giá niêm yết</th>
+                        <th class="px-4 py-3">Giá gốc</th>
+                        <th class="px-4 py-3">Trạng thái</th>
+                        <th class="px-4 py-3">Thương hiệu</th>
+                        <th class="px-4 py-3">Danh mục</th>
+                        <th class="px-4 py-3">Đơn vị</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${products}" class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3" th:text="${product.id}">1</td>
+                        <td class="px-4 py-3" th:text="${product.code}">SP001</td>
+                        <td class="px-4 py-3" th:text="${product.name}">Tên SP</td>
+                        <td class="px-4 py-3" th:text="${product.description}">Mô tả ngắn</td>
+                        <td class="px-4 py-3" th:text="${product.listingPrice}">100.000</td>
+                        <td class="px-4 py-3" th:text="${product.originPrice}">80.000</td>
+                        <td class="px-4 py-3" th:text="${product.status}">Active</td>
+                        <td class="px-4 py-3" th:text="${product.brandId}">1</td>
+                        <td class="px-4 py-3" th:text="${product.categoryId}">2</td>
+                        <td class="px-4 py-3" th:text="${product.unitId}">3</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

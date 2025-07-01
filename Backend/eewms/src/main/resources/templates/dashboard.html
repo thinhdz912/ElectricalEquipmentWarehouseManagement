@@ -123,26 +123,25 @@
     </main>
 </div>
 <script>
-    const btn = document.getElementById('userMenuBtn');
-    const dropdown = document.getElementById('userMenuDropdown');
+const btn = document.getElementById('userMenuBtn');
+const dropdown = document.getElementById('userMenuDropdown');
 
-    btn.addEventListener('click', function(event) {
-        event.stopPropagation();
-        dropdown.classList.toggle('hidden');
-    });
+btn.addEventListener('click', function(event) {
+    event.stopPropagation();
+    dropdown.classList.toggle('hidden');
+});
 
-    document.addEventListener('click', function() {
-        if (!dropdown.classList.contains('hidden')) {
-            dropdown.classList.add('hidden');
-        }
-    });
+document.addEventListener('click', function() {
+    if (!dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+    }
+});
 
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            dropdown.classList.add('hidden');
-        }
-    });
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        dropdown.classList.add('hidden');
+    }
+});
 </script>
-
 </body>
 </html>
