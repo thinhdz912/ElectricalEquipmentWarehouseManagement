@@ -2,47 +2,51 @@ package com.eewms.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
-@Getter
-@Setter
-@Builder
+@Table(name = "products")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true, nullable = false)
     private String code;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "origin_price")
+    @Column(name = "origin_price", nullable = false)
     private BigDecimal originPrice;
 
-    @Column(name = "listing_price")
+    @Column(name = "listing_price", nullable = false)
     private BigDecimal listingPrice;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false)
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")  // ← KHÔNG được thiếu dòng này
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
     private Setting unit;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
     private Setting category;
 
-    @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", nullable = false)
     private Setting brand;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

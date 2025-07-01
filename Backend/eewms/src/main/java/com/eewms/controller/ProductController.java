@@ -1,78 +1,61 @@
 package com.eewms.controller;
 
-import com.eewms.dto.ProductCreateDTO;
+import com.eewms.dto.ProductFormDTO;
 import com.eewms.dto.ProductDetailsDTO;
-import com.eewms.dto.ProductUpdateDTO;
 import com.eewms.exception.InventoryException;
 import com.eewms.services.IProductServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Map;
-
-@RestController
-@RequestMapping("/api/products")
+@Controller
+@RequestMapping({"/products", "/product-list"})
 @RequiredArgsConstructor
 public class ProductController {
-
     private final IProductServices productService;
 
-    @PostMapping
-    public ResponseEntity<Object> create(@RequestBody ProductCreateDTO dto) {
-        try {
-            return new ResponseEntity<>(
-                    productService.create(dto),
-                    HttpStatus.OK
-            );
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
-        }
+    // 1. Danh sách sản phẩm
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("products", productService.getAll());
+        System.out.println("Số sản phẩm: " + productService.getAll().size());
+        return "product-list";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody ProductUpdateDTO dto) {
-        try {
-            return new ResponseEntity<>(
-                    productService.update(id, dto),
-                    HttpStatus.OK
-            );
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
-        }
+    @GetMapping("/create")
+    public String createForm(Model model) {
+        model.addAttribute("productForm", new ProductFormDTO());
+        return "products/form";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Integer id) {
-        try {
-            productService.delete(id);
-            return ResponseEntity.ok(Map.of("message", "Xoá sản phẩm thành công"));
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
+    @PostMapping("/save")
+    public String save(@ModelAttribute ProductFormDTO productForm,
+                       BindingResult br,
+                       RedirectAttributes ra) {
+        if (br.hasErrors()) {
+            return "products/form";
         }
+        try {
+            if (productForm.getId() == null) productService.create(productForm);
+            else productService.update(productForm.getId(), productForm);
+            ra.addFlashAttribute("success", "Lưu sản phẩm thành công");
+        } catch (InventoryException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+            return "products/form";
+        }
+        return "redirect:/products";
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Integer id) {
+    public String detail(@PathVariable Integer id, Model model) {
         try {
-            return new ResponseEntity<>(
-                    productService.getById(id),
-                    HttpStatus.OK
-            );
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
+            model.addAttribute("product", productService.getById(id));
+            return "products/detail";
+        } catch (InventoryException e) {
+            return "redirect:/products";
         }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductDetailsDTO>> getAll() {
-        List<ProductDetailsDTO> list = productService.getAll();
-        return ResponseEntity.ok(list);
     }
 }

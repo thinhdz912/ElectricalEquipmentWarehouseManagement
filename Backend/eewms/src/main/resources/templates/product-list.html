@@ -5,54 +5,121 @@
     <title>Danh sách sản phẩm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: #4a5568;
+            border-radius: 20px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 <div class="flex h-screen">
-    <!-- Sidebar fragment -->
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <!-- Main Content -->
     <main class="flex-1 ml-64">
-        <!-- Header fragment -->
         <div th:replace="~{fragments/header :: header}"></div>
 
-        <!-- Page Content -->
-        <div class="p-6">
-            <h1 class="text-2xl font-bold text-gray-800 mb-4">Danh sách sản phẩm</h1>
+        <!-- Tiêu đề + Nút Thêm -->
+        <div class="flex justify-between items-center mb-4 px-6 py-6">
+            <h1 class="text-2xl font-bold">Danh sách sản phẩm</h1>
+            <a onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">+ Thêm</a>
+        </div>
 
-            <div class="overflow-x-auto bg-white rounded-lg shadow">
-                <table class="min-w-full text-sm text-left text-gray-700">
-                    <thead class="bg-gray-200 text-xs uppercase font-semibold">
-                    <tr>
-                        <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Mã SP</th>
-                        <th class="px-4 py-3">Tên</th>
-                        <th class="px-4 py-3">Mô tả</th>
-                        <th class="px-4 py-3">Giá niêm yết</th>
-                        <th class="px-4 py-3">Giá gốc</th>
-                        <th class="px-4 py-3">Trạng thái</th>
-                        <th class="px-4 py-3">Thương hiệu</th>
-                        <th class="px-4 py-3">Danh mục</th>
-                        <th class="px-4 py-3">Đơn vị</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="product : ${products}" class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3" th:text="${product.id}">1</td>
-                        <td class="px-4 py-3" th:text="${product.code}">SP001</td>
-                        <td class="px-4 py-3" th:text="${product.name}">Tên SP</td>
-                        <td class="px-4 py-3" th:text="${product.description}">Mô tả ngắn</td>
-                        <td class="px-4 py-3" th:text="${product.listingPrice}">100.000</td>
-                        <td class="px-4 py-3" th:text="${product.originPrice}">80.000</td>
-                        <td class="px-4 py-3" th:text="${product.status}">Active</td>
-                        <td class="px-4 py-3" th:text="${product.brandId}">1</td>
-                        <td class="px-4 py-3" th:text="${product.categoryId}">2</td>
-                        <td class="px-4 py-3" th:text="${product.unitId}">3</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <!-- Bảng dữ liệu -->
+        <div class="overflow-x-auto bg-white rounded-lg shadow px-4">
+            <table class="min-w-full text-sm text-left">
+                <thead class="bg-gray-200 text-xs uppercase font-semibold">
+                <tr>
+                    <th class="px-4 py-3">ID</th>
+                    <th class="px-4 py-3">Mã SP</th>
+                    <th class="px-4 py-3">Tên</th>
+                    <th class="px-4 py-3">Mô tả</th>
+                    <th class="px-4 py-3">Giá niêm yết</th>
+                    <th class="px-4 py-3">Giá gốc</th>
+                    <th class="px-4 py-3">Trạng thái</th>
+                    <th class="px-4 py-3">Thương hiệu</th>
+                    <th class="px-4 py-3">Danh mục</th>
+                    <th class="px-4 py-3">Đơn vị</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}" class="border-b hover:bg-gray-50">
+                    <td th:text="${product.id}" class="px-4 py-3"></td>
+                    <td th:text="${product.code}" class="px-4 py-3"></td>
+                    <td th:text="${product.name}" class="px-4 py-3"></td>
+                    <td th:text="${product.description}" class="px-4 py-3"></td>
+                    <td th:text="${product.listingPrice}" class="px-4 py-3"></td>
+                    <td th:text="${product.originPrice}" class="px-4 py-3"></td>
+                    <td th:text="${product.status}" class="px-4 py-3"></td>
+                    <td th:text="${product.brandName}" class="px-4 py-3"></td>
+                    <td th:text="${product.categoryName}" class="px-4 py-3"></td>
+                    <td th:text="${product.unitName}" class="px-4 py-3"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal Thêm sản phẩm -->
+        <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white w-full max-w-xl rounded shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Thêm sản phẩm</h2>
+                    <button onclick="closeModal()"><i class="ri-close-line text-2xl"></i></button>
+                </div>
+                <form th:action="@{/products}" th:object="${productDTO}" method="post">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-sm">Mã SP</label><input type="text" th:field="*{code}" class="w-full border rounded px-3 py-2" required></div>
+                        <div><label class="block text-sm">Tên</label><input type="text" th:field="*{name}" class="w-full border rounded px-3 py-2" required></div>
+                        <div><label class="block text-sm">Giá gốc</label><input type="number" th:field="*{originPrice}" class="w-full border rounded px-3 py-2"></div>
+                        <div><label class="block text-sm">Giá niêm yết</label><input type="number" th:field="*{listingPrice}" class="w-full border rounded px-3 py-2"></div>
+                        <div><label class="block text-sm">Trạng thái</label><input type="text" th:field="*{status}" class="w-full border rounded px-3 py-2"></div>
+                        <div><label class="block text-sm">Số lượng</label><input type="number" th:field="*{quantity}" class="w-full border rounded px-3 py-2"></div>
+                        <div>
+                            <label class="block text-sm">Đơn vị</label>
+                            <select th:field="*{unitId}" class="w-full border rounded px-3 py-2">
+                                <option th:each="u : ${units}" th:value="${u.id}" th:text="${u.name}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm">Thương hiệu</label>
+                            <select th:field="*{brandId}" class="w-full border rounded px-3 py-2">
+                                <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm">Danh mục</label>
+                            <select th:field="*{categoryId}" class="w-full border rounded px-3 py-2">
+                                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm">Mô tả</label>
+                            <textarea th:field="*{description}" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-2 mt-4">
+                        <button type="button" onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Hủy</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Lưu</button>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <script>
+            function openModal() {
+                document.getElementById('productModal').classList.remove('hidden');
+            }
+            function closeModal() {
+                document.getElementById('productModal').classList.add('hidden');
+            }
+        </script>
     </main>
 </div>
 </body>
