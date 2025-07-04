@@ -2,8 +2,10 @@ package com.eewms.controller;
 
 import com.eewms.dto.ProductFormDTO;
 import com.eewms.dto.ProductDetailsDTO;
+import com.eewms.constant.SettingType;
 import com.eewms.exception.InventoryException;
 import com.eewms.services.IProductServices;
+import com.eewms.services.ISettingServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,50 +13,66 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping({"/products", "/product-list"})
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductServices productService;
-
-    // 1. Danh sách sản phẩm
+    private final ISettingServices settingService;
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model) throws InventoryException {
         model.addAttribute("products", productService.getAll());
-        System.out.println("Số sản phẩm: " + productService.getAll().size());
+        model.addAttribute("productDTO", new ProductFormDTO());
+        model.addAttribute("units",      settingService.getByType(SettingType.UNIT));
+        model.addAttribute("brands",     settingService.getByType(SettingType.BRAND));
+        model.addAttribute("categories", settingService.getByType(SettingType.CATEGORY));
         return "product-list";
     }
 
-    @GetMapping("/create")
-    public String createForm(Model model) {
-        model.addAttribute("productForm", new ProductFormDTO());
-        return "products/form";
+    // xử lý submit modal form
+    @PostMapping
+    public String create(@ModelAttribute("productDTO") ProductFormDTO dto,
+                         RedirectAttributes ra) {
+        try {
+            productService.create(dto);
+            ra.addFlashAttribute("success", "Thêm sản phẩm thành công");
+        } catch (InventoryException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/products";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute ProductFormDTO productForm,
-                       BindingResult br,
-                       RedirectAttributes ra) {
+    public String save(
+            @ModelAttribute ProductFormDTO productForm,
+            BindingResult br,
+            RedirectAttributes ra,
+            Model model) {
         if (br.hasErrors()) {
             return "products/form";
         }
         try {
-            if (productForm.getId() == null) productService.create(productForm);
-            else productService.update(productForm.getId(), productForm);
-            ra.addFlashAttribute("success", "Lưu sản phẩm thành công");
-        } catch (InventoryException e) {
-            ra.addFlashAttribute("error", e.getMessage());
+            if (productForm.getId() == null)
+                productService.create(productForm);
+            else
+                productService.update(productForm.getId(), productForm);
+            ra.addFlashAttribute("success", "Lưu thành công");
+            return "redirect:/products";
+        } catch (InventoryException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
             return "products/form";
         }
-        return "redirect:/products";
     }
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model) {
         try {
-            model.addAttribute("product", productService.getById(id));
+            ProductDetailsDTO dto = productService.getById(id);
+            model.addAttribute("product", dto);
             return "products/detail";
-        } catch (InventoryException e) {
+        } catch (InventoryException ex) {
             return "redirect:/products";
         }
     }

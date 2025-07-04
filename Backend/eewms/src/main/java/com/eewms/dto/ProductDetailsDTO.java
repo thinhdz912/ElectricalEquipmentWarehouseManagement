@@ -17,8 +17,10 @@ public class ProductDetailsDTO {
     private String description;
     private String status;
     private Integer quantity;
-    private String unitName;
-    private String categoryName;
-    private String brandName;
+
+    private SettingDTO unit;
+    private SettingDTO category;
+    private SettingDTO brand;
+
     private List<ImageDTO> images;
 }
