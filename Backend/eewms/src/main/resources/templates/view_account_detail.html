@@ -28,7 +28,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-sans">
 <div class="flex h-screen">
     <!-- Sidebar -->
     <aside class="w-64 bg-[#1e293b] text-white flex flex-col fixed h-full">
@@ -108,23 +108,7 @@
     <!-- Main Content -->
     <main class="flex-1 ml-64">
         <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-500">Trang chủ / Tài khoản</p>
-                <h1 class="text-xl font-bold text-gray-800">Thông tin tài khoản</h1>
-            </div>
-
-            <!-- User Menu -->
-            <div class="flex items-center space-x-4">
-                <button class="p-2 rounded-full hover:bg-gray-100">
-                    <i class="ri-settings-3-line text-xl text-gray-600"></i>
-                </button>
-                <div class="flex items-center space-x-2">
-                    <p class="font-semibold text-sm">Username</p>
-                    <i class="ri-arrow-down-s-line text-gray-600"></i>
-                </div>
-            </div>
-        </header>
+        <div th:replace="~{fragments/header :: header}"></div>
 
         <!-- Page Content -->
         <div class="p-6">
@@ -186,6 +170,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </main>
 </div>
 
@@ -249,6 +236,26 @@
     editButton.addEventListener('click', openModal);
     cancelButton.addEventListener('click', closeModal);
     modalBackdrop.addEventListener('click', closeModal);
+
+    const btn = document.getElementById('userMenuBtn');
+    const dropdown = document.getElementById('userMenuDropdown');
+
+    btn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            dropdown.classList.add('hidden');
+        }
+    });
 </script>
 </body>
 </html>

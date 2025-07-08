@@ -5,28 +5,30 @@
     <title>Danh sách người dùng</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: #4a5568;
+            border-radius: 20px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
 <div class="flex h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#1e293b] text-white flex flex-col fixed h-full">
-        <div class="p-6 text-center border-b border-gray-700">
-            <h1 class="text-2xl font-bold">Thiết Bị Điện</h1>
-            <h2 class="text-2xl font-bold">Hải Phòng</h2>
-            <p class="mt-2 text-sm text-gray-400">Role: <span th:text="${#authentication.principal.authorities[0].authority}">USER</span></p>
-        </div>
-        <nav class="flex-1 overflow-y-auto sidebar-nav px-4 py-4 space-y-2 text-sm font-medium">
-            <a th:href="@{/dashboard}" class="flex items-center px-4 py-2.5 rounded-md hover:bg-gray-700">
-                <i class="ri-home-5-line w-6 text-lg"></i> <span class="ml-2">Trang chủ</span>
-            </a>
-            <a th:href="@{/admin/users}" class="flex items-center px-4 py-2.5 rounded-md bg-blue-600">
-                <i class="ri-account-circle-line w-6 text-lg"></i> <span class="ml-2">Tài khoản</span>
-            </a>
-        </nav>
-    </aside>
+    <!-- Sidebar fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <!-- Main Content -->
-    <main class="flex-1 ml-64 p-6 overflow-auto">
+    <main class="flex-1 ml-64">
+        <!-- Header -->
+        <div th:replace="~{fragments/header :: header}"></div>
+
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Danh sách người dùng</h1>
             <div class="flex items-center space-x-2">
@@ -134,6 +136,8 @@
             </div>
         </div>
 
+        <!-- Footer -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </main>
 </div>
 
@@ -161,6 +165,26 @@
     function closeEditModal() {
         document.getElementById('editUserModal').classList.add('hidden');
     }
+
+    const btn = document.getElementById('userMenuBtn');
+    const dropdown = document.getElementById('userMenuDropdown');
+
+    btn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            dropdown.classList.add('hidden');
+        }
+    });
 </script>
 </body>
 </html>

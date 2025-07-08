@@ -1,5 +1,5 @@
 
-<aside th:fragment="sidebar" class="w-64 bg-[#1e293b] text-white flex flex-col fixed h-full">
+<aside id="sidebar" th:fragment="sidebar" class="w-64 bg-[#1e293b] text-white flex flex-col fixed h-full">
     <!-- Logo and Title -->
     <div class="p-6 text-center border-b border-gray-700">
         <h1 class="text-2xl font-bold">Thiết bị điện</h1>
@@ -14,15 +14,13 @@
         <span th:case="*">Unknown</span>
     </span>
         </p>
-
-
     </div>
 
     <!-- Navigation Links -->
     <nav class="flex-1 overflow-y-auto sidebar-nav px-4 py-4">
         <ul class="space-y-2">
             <li>
-                <a th:href="@{/dashboard}" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-md bg-blue-600">
+                <a th:href="@{/dashboard}" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-md hover:bg-gray-700">
                     <i class="ri-home-5-line w-6 text-lg"></i>
                     <span>Trang chủ</span>
                 </a>
@@ -120,6 +118,5 @@
             </button>
         </form>
     </div>
-
 </aside>
 

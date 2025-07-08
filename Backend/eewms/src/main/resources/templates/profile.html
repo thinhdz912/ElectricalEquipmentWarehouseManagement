@@ -14,50 +14,15 @@
         .sidebar-nav::-webkit-scrollbar-thumb { background-color: #4a5568; border-radius: 20px; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-sans">
 <div class="flex h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#1e293b] text-white flex flex-col fixed h-full">
-        <div class="p-6 text-center border-b border-gray-700">
-            <h1 class="text-2xl font-bold">Thiết bị điện</h1>
-            <h2 class="text-2xl font-bold">Hải Phòng</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                Role:
-                <span th:each="auth : ${#authentication.authorities}" th:text="${auth.authority.replace('ROLE_', '')}">ROLE</span>
-            </p>
-        </div>
-        <nav class="flex-1 overflow-y-auto sidebar-nav px-4 py-4">
-            <ul class="space-y-2 text-sm font-medium">
-                <li><a th:href="@{/dashboard}" class="flex items-center px-4 py-2.5 rounded-md hover:bg-gray-700"><i class="ri-home-5-line w-6 text-lg"></i><span>Trang chủ</span></a></li>
-                <li><a th:href="@{/admin/users}" class="flex items-center px-4 py-2.5 rounded-md hover:bg-gray-700"><i class="ri-account-circle-line w-6 text-lg"></i><span>Tài khoản</span></a></li>
-            </ul>
-        </nav>
-    </aside>
+    <!-- Sidebar fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <!-- Main Content -->
     <main class="flex-1 ml-64">
-        <header class="bg-white shadow-sm p-4 flex justify-end items-center">
-            <div class="relative">
-                <button onclick="toggleUserDropdown()" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 focus:outline-none">
-                    <img src="https://placehold.co/40x40/7e22ce/ffffff?text=U" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500" alt="Avatar">
-                    <div class="hidden md:block text-left">
-                        <p class="font-semibold text-sm" th:text="${#authentication.name}">Tên đăng nhập</p>
-                        <p class="text-xs text-gray-500">Người dùng</p>
-                    </div>
-                    <i class="ri-arrow-down-s-line text-gray-500 text-xl"></i>
-                </button>
-                <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-md z-50 hidden">
-                    <a th:href="@{/account/info}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="ri-user-line mr-2"></i> Thông tin tài khoản
-                    </a>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="ri-logout-box-r-line mr-2"></i> Đăng xuất
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </header>
+        <!-- Header -->
+        <div th:replace="~{fragments/header :: header}"></div>
 
         <!-- Profile Form -->
         <div class="p-8 max-w-4xl mx-auto">
@@ -98,6 +63,9 @@
                 </div>
             </form>
         </div>
+
+        <!-- Footer -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </main>
 </div>
 
