@@ -207,57 +207,75 @@
             </div>
         </div>
 
-        <script>
-            function openModal(){document.getElementById('productModal').classList.remove('hidden');}
-            function closeModal(){document.getElementById('productModal').classList.add('hidden');}
-
-            function openDetailModal(anchor) {
-                const tr = anchor.closest('tr');
-                document.getElementById('d_code').innerText = tr.dataset.code;
-                document.getElementById('d_name').innerText = tr.dataset.name;
-                document.getElementById('d_description').innerText = tr.dataset.description;
-                document.getElementById('d_originPrice').innerText = tr.dataset.originprice;
-                document.getElementById('d_listingPrice').innerText = tr.dataset.listingprice;
-                document.getElementById('d_quantity').innerText = tr.dataset.quantity;
-                document.getElementById('d_status').innerText = tr.dataset.status;
-                document.getElementById('d_brand').innerText = tr.dataset.brand;
-                document.getElementById('d_category').innerText = tr.dataset.category;
-                document.getElementById('d_unit').innerText = tr.dataset.unit;
-                document.getElementById('d_editBtn').href = `/products/${tr.dataset.id}/edit`;
-                document.getElementById('detailProductModal').classList.remove('hidden');
-            }
-
-            function closeDetailModal() {
-                document.getElementById('detailProductModal').classList.add('hidden');
-            }
-
-            function openEditModal(anchor) {
-                const tr = anchor.closest('tr');
-                document.getElementById('editId').value = tr.dataset.id;
-                document.getElementById('editCode').value = tr.dataset.code;
-                document.getElementById('editName').value = tr.dataset.name;
-                document.getElementById('editOriginPrice').value = tr.dataset.originprice;
-                document.getElementById('editListingPrice').value = tr.dataset.listingprice;
-                document.getElementById('editQuantity').value = tr.dataset.quantity;
-                document.getElementById('editStatus').value = tr.dataset.status;
-                document.getElementById('editUnitId').value = tr.dataset.unitId;
-                document.getElementById('editBrandId').value = tr.dataset.brandId;
-                document.getElementById('editCategoryId').value = tr.dataset.categoryId;
-
-                document.getElementById('editDescription').value = tr.dataset.description;
-
-                document.getElementById('editProductForm').action = `/products/update/${tr.dataset.id}`;
-                document.getElementById('editProductModal').classList.remove('hidden');
-            }
-
-            function closeEditModal() {
-                document.getElementById('editProductModal').classList.add('hidden');
-            }
-
-        </script>
         <!-- Footer -->
         <div th:replace="~{fragments/footer :: footer}"></div>
     </main>
 </div>
+<script>
+    function openModal(){document.getElementById('productModal').classList.remove('hidden');}
+    function closeModal(){document.getElementById('productModal').classList.add('hidden');}
+
+    function openDetailModal(anchor) {
+        const tr = anchor.closest('tr');
+        document.getElementById('d_code').innerText = tr.dataset.code;
+        document.getElementById('d_name').innerText = tr.dataset.name;
+        document.getElementById('d_description').innerText = tr.dataset.description;
+        document.getElementById('d_originPrice').innerText = tr.dataset.originprice;
+        document.getElementById('d_listingPrice').innerText = tr.dataset.listingprice;
+        document.getElementById('d_quantity').innerText = tr.dataset.quantity;
+        document.getElementById('d_status').innerText = tr.dataset.status;
+        document.getElementById('d_brand').innerText = tr.dataset.brand;
+        document.getElementById('d_category').innerText = tr.dataset.category;
+        document.getElementById('d_unit').innerText = tr.dataset.unit;
+        document.getElementById('d_editBtn').href = `/products/${tr.dataset.id}/edit`;
+        document.getElementById('detailProductModal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detailProductModal').classList.add('hidden');
+    }
+
+    function openEditModal(anchor) {
+        const tr = anchor.closest('tr');
+        document.getElementById('editId').value = tr.dataset.id;
+        document.getElementById('editCode').value = tr.dataset.code;
+        document.getElementById('editName').value = tr.dataset.name;
+        document.getElementById('editOriginPrice').value = tr.dataset.originprice;
+        document.getElementById('editListingPrice').value = tr.dataset.listingprice;
+        document.getElementById('editQuantity').value = tr.dataset.quantity;
+        document.getElementById('editStatus').value = tr.dataset.status;
+        document.getElementById('editUnitId').value = tr.dataset.unitId;
+        document.getElementById('editBrandId').value = tr.dataset.brandId;
+        document.getElementById('editCategoryId').value = tr.dataset.categoryId;
+
+        document.getElementById('editDescription').value = tr.dataset.description;
+
+        document.getElementById('editProductForm').action = `/products/update/${tr.dataset.id}`;
+        document.getElementById('editProductModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProductModal').classList.add('hidden');
+    }
+    const btn = document.getElementById('userMenuBtn');
+    const dropdown = document.getElementById('userMenuDropdown');
+
+    btn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>
 </body>
 </html>
