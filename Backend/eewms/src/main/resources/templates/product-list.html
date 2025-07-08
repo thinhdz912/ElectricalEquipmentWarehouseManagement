@@ -55,15 +55,19 @@
                     th:data-id="${product.id}"
                     th:data-code="${product.code}"
                     th:data-name="${product.name}"
-                    th:data-description="${product.description}"
                     th:data-originprice="${product.originPrice}"
                     th:data-listingprice="${product.listingPrice}"
                     th:data-quantity="${product.quantity}"
                     th:data-status="${product.status}"
                     th:data-brand="${product.brand.name}"
+                    th:data-brand-id="${product.brand.id}"
                     th:data-category="${product.category.name}"
-                    th:data-unit="${product.unit.name}">
-                    <td class="px-4 py-3" th:text="${product.code}"></td>
+                    th:data-category-id="${product.category.id}"
+                    th:data-unit="${product.unit.name}"
+                    th:data-unit-id="${product.unit.id}"
+                    th:data-description="${product.description}">
+
+                <td class="px-4 py-3" th:text="${product.code}"></td>
                     <td class="px-4 py-3" th:text="${product.name}"></td>
                     <td class="px-4 py-3" th:text="${product.listingPrice}"></td>
                     <td class="px-4 py-3" th:text="${product.quantity}"></td>
@@ -125,9 +129,25 @@
                         <div><label>Giá niêm yết</label><input type="number" id="editListingPrice" name="listingPrice" class="w-full border rounded px-3 py-2"/></div>
                         <div><label>Trạng thái</label><input type="text" id="editStatus" name="status" class="w-full border rounded px-3 py-2"/></div>
                         <div><label>Số lượng</label><input type="number" id="editQuantity" name="quantity" class="w-full border rounded px-3 py-2"/></div>
-                        <div><label>Thương hiệu</label><input type="text" id="editBrand" name="brand" class="w-full border rounded px-3 py-2"/></div>
-                        <div><label>Danh mục</label><input type="text" id="editCategory" name="category" class="w-full border rounded px-3 py-2"/></div>
-                        <div><label>Đơn vị</label><input type="text" id="editUnit" name="unit" class="w-full border rounded px-3 py-2"/></div>
+                        <div>
+                            <label>Đơn vị</label>
+                            <select id="editUnitId" name="unitId" class="w-full border rounded px-3 py-2">
+                                <option th:each="u : ${units}" th:value="${u.id}" th:text="${u.name}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Thương hiệu</label>
+                            <select id="editBrandId" name="brandId" class="w-full border rounded px-3 py-2">
+                                <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Danh mục</label>
+                            <select id="editCategoryId" name="categoryId" class="w-full border rounded px-3 py-2">
+                                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                            </select>
+                        </div>
+
                         <div class="col-span-2">
                             <label>Mô tả</label>
                             <textarea id="editDescription" name="description" class="w-full border rounded px-3 py-2" rows="3"></textarea>
@@ -220,9 +240,10 @@
                 document.getElementById('editListingPrice').value = tr.dataset.listingprice;
                 document.getElementById('editQuantity').value = tr.dataset.quantity;
                 document.getElementById('editStatus').value = tr.dataset.status;
-                document.getElementById('editBrand').value = tr.dataset.brand;
-                document.getElementById('editCategory').value = tr.dataset.category;
-                document.getElementById('editUnit').value = tr.dataset.unit;
+                document.getElementById('editUnitId').value = tr.dataset.unitId;
+                document.getElementById('editBrandId').value = tr.dataset.brandId;
+                document.getElementById('editCategoryId').value = tr.dataset.categoryId;
+
                 document.getElementById('editDescription').value = tr.dataset.description;
 
                 document.getElementById('editProductForm').action = `/products/update/${tr.dataset.id}`;
