@@ -3,6 +3,9 @@ package com.eewms.controller;
 import com.eewms.dto.ProductFormDTO;
 import com.eewms.dto.ProductDetailsDTO;
 import com.eewms.constant.SettingType;
+import com.eewms.dto.UserDTO;
+import com.eewms.dto.UserMapper;
+import com.eewms.entities.User;
 import com.eewms.exception.InventoryException;
 import com.eewms.services.IProductServices;
 import com.eewms.services.ISettingServices;
@@ -66,6 +69,22 @@ public class ProductController {
         }
     }
 
+    // Xử lý cập nhật
+    @PostMapping("/update/{id}")
+    public String updateProduct(@PathVariable Integer id,
+                             @ModelAttribute("userDTO") UserDTO userDTO,
+                                @ModelAttribute ProductFormDTO productForm,
+                             RedirectAttributes redirect) {
+        try {
+            productService.update(id, productForm);
+            redirect.addFlashAttribute("success", "Cập nhật sản phẩm thành công");
+            return "redirect:/products";
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Lỗi khi cập nhật: " + e.getMessage());
+        }
+
+        return "redirect:/products";
+    }
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model) {
         try {
