@@ -114,22 +114,48 @@ function activateMenu() {
 
 //Admin Menu
 function activateSidebarMenu() {
-    var current = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
-    if (current !== "" && document.getElementById("sidebar")){
-        var menuItems = document.querySelectorAll('#sidebar a');
-        for (var i = 0, len = menuItems.length; i < len; i++) {
-            if (menuItems[i].getAttribute("href").indexOf(current) !== -1) {
-                menuItems[i].parentElement.className += " active";
-                if(menuItems[i].closest(".sidebar-submenu")) {
-                    menuItems[i].closest(".sidebar-submenu").classList.add("d-block");
-                }
-                if(menuItems[i].closest(".sidebar-dropdown")) {
-                    menuItems[i].closest(".sidebar-dropdown").classList.add("active");
-                }
+    var currentPath = location.pathname;
+    var sidebar = document.getElementById("sidebar");
+    if (!sidebar) return;
+
+    var menuItems = sidebar.querySelectorAll("a");
+
+    for (var i = 0; i < menuItems.length; i++) {
+        var item = menuItems[i];
+        var href = item.getAttribute("href");
+
+        if (href && currentPath.startsWith(href)) {
+            item.classList.add("bg-blue-600", "text-white");
+            item.classList.remove("hover:bg-gray-700");
+
+            // xử lý hiển thị submenu nếu có
+            if (item.closest(".sidebar-submenu")) {
+                item.closest(".sidebar-submenu").classList.add("d-block");
+            }
+            if (item.closest(".sidebar-dropdown")) {
+                item.closest(".sidebar-dropdown").classList.add("active");
             }
         }
     }
 }
+
+// function activateSidebarMenu() {
+//     var current = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
+//     if (current !== "" && document.getElementById("sidebar")){
+//         var menuItems = document.querySelectorAll('#sidebar a');
+//         for (var i = 0, len = menuItems.length; i < len; i++) {
+//             if (menuItems[i].getAttribute("href").indexOf(current) !== -1) {
+//                 menuItems[i].parentElement.className += " active";
+//                 if(menuItems[i].closest(".sidebar-submenu")) {
+//                     menuItems[i].closest(".sidebar-submenu").classList.add("d-block");
+//                 }
+//                 if(menuItems[i].closest(".sidebar-dropdown")) {
+//                     menuItems[i].closest(".sidebar-dropdown").classList.add("active");
+//                 }
+//             }
+//         }
+//     }
+// }
 
 if(document.getElementById("close-sidebar")){
     document.getElementById("close-sidebar").addEventListener("click", function() {
