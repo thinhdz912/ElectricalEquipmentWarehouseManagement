@@ -83,4 +83,18 @@ public class AccountController {
             return "redirect:/account/change-password";
         }
     }
+    @ModelAttribute("loggedInAvatarUrl")
+    public String getAvatarUrl(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) return null;
+
+        return userService.findByUsername(userDetails.getUsername())
+                .map(User::getAvatarUrl)
+                .orElse(null);
+    }
+    @ModelAttribute("avatarTimestamp")
+    public long avatarTimestamp() {
+        return System.currentTimeMillis();
+    }
+
+
 }

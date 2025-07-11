@@ -42,9 +42,12 @@
             <table class="min-w-full table-auto text-sm">
                 <thead class="bg-gray-200 text-gray-700">
                 <tr>
+
                     <th class="px-4 py-3 text-left">ID</th>
                     <th class="px-4 py-3 text-left">Họ và tên</th>
                     <th class="px-4 py-3 text-left">Tên tài khoản</th>
+                    <th class="px-4 py-3 text-left">Email</th>
+                    <th class="px-4 py-3 text-left">SĐT</th>
                     <th class="px-4 py-3 text-left">Chức vụ</th>
                     <th class="px-4 py-3 text-left">Trạng thái</th>
                     <th class="px-4 py-3 text-center">Hành động</th>
@@ -62,6 +65,8 @@
                     <td class="px-4 py-3" th:text="${user.id}"></td>
                     <td class="px-4 py-3" th:text="${user.fullName}"></td>
                     <td class="px-4 py-3" th:text="${user.username}"></td>
+                    <td class="px-4 py-3" th:text="${user.email}"></td>
+                    <td class="px-4 py-3" th:text="${user.phone}"></td>
                     <td class="px-4 py-3">
                             <span th:each="role : ${user.roleNames}"
                                   th:text="${role}"
