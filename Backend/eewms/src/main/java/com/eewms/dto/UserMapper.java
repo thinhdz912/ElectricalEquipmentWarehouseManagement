@@ -28,6 +28,7 @@ public class UserMapper {
                 .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .address(dto.getAddress())
+                .avatarUrl(dto.getAvatarUrl())
                 .roles(roles)
                 .build();
     }
@@ -49,6 +50,7 @@ public class UserMapper {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .address(user.getAddress())
+                .avatarUrl(user.getAvatarUrl())
                 .roleIds(roleIds)
                 .roleNames(roleNames)
                 .build();

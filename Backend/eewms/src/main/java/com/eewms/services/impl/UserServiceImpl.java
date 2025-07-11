@@ -115,8 +115,8 @@ public class    UserServiceImpl implements IUserService {
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setAddress(dto.getAddress());
+        user.setAvatarUrl(dto.getAvatarUrl());
 
-        // ❗Không update password, enabled, role, username
         userRepository.save(user);
     }
 }

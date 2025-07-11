@@ -37,6 +37,9 @@ public class User {
     @Column(length = 255)
     private String address;
 
+    @Column(length = 500)
+    private String avatarUrl;
+
     private boolean enabled = true;
 
     @ManyToMany(fetch = FetchType.EAGER)

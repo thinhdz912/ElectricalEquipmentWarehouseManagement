@@ -31,4 +31,5 @@ public interface IUserService {
 
 
     void updateUserProfile(String username, UserProfileDTO dto);
+
 }
