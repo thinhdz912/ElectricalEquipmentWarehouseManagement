@@ -19,9 +19,14 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     @Override
     public String uploadImage(MultipartFile file) {
         try {
+            String uniqueFileName = "avatar_" + System.currentTimeMillis();
+
             Map<String, Object> uploadParams = ObjectUtils.asMap(
-                    "upload_preset", "eewms_unsigned" // không cần truyền folder nếu preset đã cố định
+                    "public_id", uniqueFileName,
+                    "overwrite", true,
+                    "resource_type", "image"
             );
+
 
             Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
             return uploadResult.get("secure_url").toString();
