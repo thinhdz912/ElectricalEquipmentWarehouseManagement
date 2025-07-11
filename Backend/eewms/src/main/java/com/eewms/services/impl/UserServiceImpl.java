@@ -33,9 +33,17 @@ public class    UserServiceImpl implements IUserService {
 
     @Override
     public User saveUser(User user) {
-        // Mã hóa mật khẩu trước khi lưu
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        // Nếu có mật khẩu mới thì mã hóa nếu chưa được mã hóa
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            String pwd = user.getPassword();
+            // Chỉ mã hóa nếu chưa bắt đầu bằng định dạng của BCrypt
+            if (!pwd.startsWith("$2a$") && !pwd.startsWith("$2b$") && !pwd.startsWith("$2y$")) {
+                String encodedPassword = passwordEncoder.encode(pwd);
+                user.setPassword(encodedPassword);
+            }
+        }
+
+        // Nếu không có mật khẩu thì giữ nguyên (dành cho trường hợp tạo user chưa active)
         return userRepository.save(user);
     }
 
