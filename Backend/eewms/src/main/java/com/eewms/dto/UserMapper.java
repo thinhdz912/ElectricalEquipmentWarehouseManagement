@@ -34,6 +34,7 @@ public class UserMapper {
     }
 
     public static UserDTO toDTO(User user) {
+
         List<Long> roleIds = user.getRoles() != null
                 ? user.getRoles().stream().map(Role::getId).collect(Collectors.toList())
                 : List.of();

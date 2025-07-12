@@ -41,6 +41,7 @@
                     <th class="px-4 py-3 text-left">Tên tài khoản</th>
                     <th class="px-4 py-3 text-left">Email</th>
                     <th class="px-4 py-3 text-left">SĐT</th>
+                    <th class="px-4 py-3 text-left">Địa chỉ</th>
                     <th class="px-4 py-3 text-left">Chức vụ</th>
                     <th class="px-4 py-3 text-left">Trạng thái</th>
                     <th class="px-4 py-3 text-center">Hành động</th>
@@ -60,7 +61,8 @@
                     <td class="px-4 py-3" th:text="${user.username}"></td>
                     <td class="px-4 py-3" th:text="${user.email}"></td>
                     <td class="px-4 py-3" th:text="${user.phone}"></td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" th:text="${user.address}"></td>
+                <td class="px-4 py-3">
                         <span th:each="role : ${user.roleNames}"
                               th:text="${role}"
                               class="inline-block mr-1 bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs uppercase font-medium"></span>
@@ -76,19 +78,60 @@
                             </label>
                         </form>
                     </td>
-                    <td class="px-4 py-3 text-center space-x-1">
-                        <a href="#" onclick="openEditModal(this)" class="text-blue-600 hover:text-blue-800">
-                            <i class="ri-pencil-line text-lg"></i>
-                        </a>
-                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" class="inline">
-                            <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa người dùng này không?')" class="text-red-600 hover:text-red-800">
-                                <i class="ri-delete-bin-line text-lg"></i>
+                    <td class="px-4 py-3 text-center">
+                        <form th:action="@{/admin/users/reset-password/{id}(id=${user.id})}" method="post">
+                            <button type="submit"
+                                    onclick="return confirm('Bạn có chắc muốn reset mật khẩu người dùng này không?')"
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium">
+                                Đặt lại mật khẩu
                             </button>
                         </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <!-- Pagination -->
+            <div class="flex justify-center mt-6">
+
+            <ul class="inline-flex space-x-1">
+                    <!-- Nút về đầu -->
+                <!-- Nút về đầu -->
+                <li th:if="${userPage.totalPages > 1}">
+                    <a th:href="@{/admin/users(page=0)}"
+                       class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium">«</a>
+                </li>
+
+
+                <!-- Nút về trước -->
+                    <li>
+                        <a th:href="@{/admin/users(page=${userPage.number - 1})}"
+                           th:if="${userPage.hasPrevious()}"
+                           class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium">‹</a>
+                    </li>
+
+                    <!-- Các trang -->
+                    <li th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
+                        <a th:href="@{/admin/users(page=${i})}"
+                           th:text="${i + 1}"
+                           th:classappend="${userPage.number == i} ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'"
+                           class="px-3 py-1 rounded text-sm font-medium"></a>
+                    </li>
+
+                    <!-- Nút tiếp theo -->
+                    <li>
+                        <a th:href="@{/admin/users(page=${userPage.number + 1})}"
+                           th:if="${userPage.hasNext()}"
+                           class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium">›</a>
+                    </li>
+
+                    <!-- Nút đến cuối -->
+                    <li>
+                        <a th:href="@{/admin/users(page=${userPage.totalPages - 1})}"
+                           class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium">»</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
         <!-- Modal Thêm User (KHÔNG có password, CÓ email) -->

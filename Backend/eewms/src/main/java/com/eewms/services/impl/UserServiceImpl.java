@@ -7,6 +7,8 @@ import com.eewms.repository.RoleRepository;
 import com.eewms.repository.UserRepository;
 import com.eewms.services.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -127,4 +129,9 @@ public class    UserServiceImpl implements IUserService {
 
         userRepository.save(user);
     }
+    @Override
+    public Page<User> findAllUsersPaginated(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
 }

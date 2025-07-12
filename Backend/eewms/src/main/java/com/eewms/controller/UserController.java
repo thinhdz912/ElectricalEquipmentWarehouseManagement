@@ -13,8 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 
 @Controller
 @RequestMapping("/admin/users")
@@ -28,18 +31,24 @@ public class UserController {
 
     // 1. Danh sách người dùng
     @GetMapping
-    public String listUsers(Model model) {
-        List<UserDTO> users = userService.findAllUsers()
-                .stream()
-                .map(UserMapper::toDTO)
-                .collect(Collectors.toList());
+    public String listUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
 
-        model.addAttribute("users", users);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userService.findAllUsersPaginated(pageable);
+
+        Page<UserDTO> userDTOPage = userPage.map(UserMapper::toDTO);
+
+        model.addAttribute("users", userDTOPage.getContent());
+        model.addAttribute("userPage", userDTOPage); // dùng cho phân trang
         model.addAttribute("userDTO", new UserDTO());
         model.addAttribute("allRoles", userService.getAllRoles());
 
         return "user-list";
     }
+
 
     // 2. Hiển thị form tạo (không dùng nếu dùng modal)
     @GetMapping("/new")
