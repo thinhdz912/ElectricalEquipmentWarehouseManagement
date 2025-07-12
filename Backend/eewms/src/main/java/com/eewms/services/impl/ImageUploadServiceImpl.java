@@ -24,6 +24,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
             Map<String, Object> uploadParams = ObjectUtils.asMap(
                     "public_id", uniqueFileName,
                     "overwrite", true,
+                    "invalidate", true,
                     "resource_type", "image"
             );
 
@@ -36,3 +37,4 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         }
     }
 }
+

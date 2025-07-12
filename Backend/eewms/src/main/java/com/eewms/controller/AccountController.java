@@ -5,6 +5,7 @@ import com.eewms.dto.UserProfileDTO;
 import com.eewms.entities.User;
 import com.eewms.services.IUserService;
 import com.eewms.services.ImageUploadService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +44,7 @@ public class AccountController {
     public String updateProfile(@ModelAttribute("profile") UserProfileDTO profileDTO,
                                 @RequestParam("avatarFile") MultipartFile avatarFile,
                                 RedirectAttributes redirect,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+                                @AuthenticationPrincipal UserDetails userDetails, HttpSession session) {
         try {
             if (!avatarFile.isEmpty()) {
                 String imageUrl = imageUploadService.uploadImage(avatarFile);
@@ -51,7 +52,12 @@ public class AccountController {
             }
 
             userService.updateUserProfile(userDetails.getUsername(), profileDTO);
+            // ✅ Save timestamp vào session
+            long timestamp = System.currentTimeMillis();
+            session.setAttribute("avatarTimestamp", timestamp);
+            //
             redirect.addFlashAttribute("message", "Cập nhật hồ sơ thành công.");
+
         } catch (Exception e) {
             redirect.addFlashAttribute("error", "Lỗi khi cập nhật hồ sơ: " + e.getMessage());
         }
