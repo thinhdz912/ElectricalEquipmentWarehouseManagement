@@ -33,16 +33,16 @@ public class UserController {
     @GetMapping
     public String listUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Model model) {
+        System.out.println("🔍 Từ khóa tìm kiếm: " + keyword); // THÊM DÒNG NÀY
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> userPage = userService.findAllUsersPaginated(pageable);
+        Page<UserDTO> userPage = userService.searchUsers(page, keyword);
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("keyword", keyword); // giữ lại từ khóa tìm kiếm
 
-        Page<UserDTO> userDTOPage = userPage.map(UserMapper::toDTO);
-
-        model.addAttribute("users", userDTOPage.getContent());
-        model.addAttribute("userPage", userDTOPage); // dùng cho phân trang
+        // ✅ Thêm dòng này:
         model.addAttribute("userDTO", new UserDTO());
         model.addAttribute("allRoles", userService.getAllRoles());
 

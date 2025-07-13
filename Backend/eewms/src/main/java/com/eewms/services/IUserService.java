@@ -1,5 +1,6 @@
 package com.eewms.services;
 
+import com.eewms.dto.UserDTO;
 import com.eewms.entities.User;
 import com.eewms.entities.Role;
 import com.eewms.dto.UserProfileDTO;
@@ -38,5 +39,8 @@ public interface IUserService {
 
 
     Page<User> findAllUsersPaginated(Pageable pageable);
+
+    Page<UserDTO> searchUsers(int page, String keyword);
+
 
 }
