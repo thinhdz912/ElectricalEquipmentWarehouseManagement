@@ -22,30 +22,38 @@ public class UserMapper {
         return User.builder()
                 .id(dto.getId())
                 .username(dto.getUsername())
-                .password(dto.getPassword()) // mã hóa sau
+                .password(dto.getPassword()) // sẽ mã hóa ở tầng service
                 .fullName(dto.getFullName())
                 .enabled(dto.isEnabled())
+                .phone(dto.getPhone())
+                .email(dto.getEmail())
+                .address(dto.getAddress())
+                .avatarUrl(dto.getAvatarUrl())
                 .roles(roles)
                 .build();
     }
 
-    // Entity → DTO (hiển thị form hoặc bảng)
     public static UserDTO toDTO(User user) {
-        List<Long> roleIds = user.getRoles().stream()
-                .map(Role::getId)
-                .collect(Collectors.toList());
 
-        List<String> roleNames = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "")) // bỏ ROLE_ cho dễ đọc
-                .collect(Collectors.toList());
+        List<Long> roleIds = user.getRoles() != null
+                ? user.getRoles().stream().map(Role::getId).collect(Collectors.toList())
+                : List.of();
+
+        List<String> roleNames = user.getRoles() != null
+                ? user.getRoles().stream().map(role -> role.getName().replace("ROLE_", "")).collect(Collectors.toList())
+                : List.of();
 
         return UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .enabled(user.isEnabled())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .avatarUrl(user.getAvatarUrl())
                 .roleIds(roleIds)
-                .roleNames(roleNames) // thêm vào đây
+                .roleNames(roleNames)
                 .build();
     }
 }

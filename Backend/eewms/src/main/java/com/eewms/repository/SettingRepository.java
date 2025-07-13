@@ -1,5 +1,6 @@
 package com.eewms.repository;
 
+import com.eewms.dto.SettingDTO;
 import com.eewms.entities.Setting;
 import com.eewms.constant.SettingType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,7 @@ import java.util.List;
 public interface SettingRepository extends JpaRepository<Setting, Integer> {
     boolean existsByNameAndType(String name, SettingType type);
     List<Setting> findByType(SettingType type);
+    List<SettingDTO> getByType(SettingType type);
+
+
 }

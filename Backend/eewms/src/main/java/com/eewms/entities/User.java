@@ -23,10 +23,22 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true)
     private String password;
 
     private String fullName;
+
+    @Column(length = 20)
+    private String phone;
+
+    @Column(length = 100)
+    private String email;
+
+    @Column(length = 255)
+    private String address;
+
+    @Column(length = 500)
+    private String avatarUrl;
 
     private boolean enabled = true;
 

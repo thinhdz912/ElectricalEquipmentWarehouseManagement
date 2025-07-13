@@ -21,7 +21,6 @@ public class LoginController {
         }
         return "login";
     }
-
     @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard";

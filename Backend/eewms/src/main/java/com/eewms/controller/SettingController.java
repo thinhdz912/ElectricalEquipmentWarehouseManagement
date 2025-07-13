@@ -5,75 +5,66 @@ import com.eewms.dto.SettingDTO;
 import com.eewms.exception.InventoryException;
 import com.eewms.services.ISettingServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
 
-@RestController
-@RequestMapping("/api/settings")
+@Controller
+@RequestMapping("/settings")
 @RequiredArgsConstructor
 public class SettingController {
     private final ISettingServices settingService;
 
-    // Tạo mới → POST /api/settings
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody SettingDTO dto) {
-        try {
-            SettingDTO created = settingService.create(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
-        }
+    @ModelAttribute("types")
+    public SettingType[] types() {
+        return SettingType.values();
     }
 
-    // Cập nhật → PUT /api/settings/{id}
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id,
-                                    @RequestBody SettingDTO dto) {
-        try {
-            SettingDTO updated = settingService.update(id, dto);
-            return ResponseEntity.ok(updated);
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
-        }
+    @GetMapping
+    public String dashboard(Model model) {
+        model.addAttribute("settings", List.of());
+        model.addAttribute("settingType", null);
+        model.addAttribute("settingForm", new SettingDTO());
+        return "settings/list";
     }
 
-    // Xóa → DELETE /api/settings/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+
+    @GetMapping("/{type}")
+    public String listByType(@PathVariable SettingType type, Model model) {
+        model.addAttribute("settingType", type);
+        model.addAttribute("settings", settingService.getByType(type));
+        model.addAttribute("settingForm", SettingDTO.builder()
+                .type(type)
+                .build());
+        return "settings/list";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute("settingForm") SettingDTO dto,
+                       RedirectAttributes ra) {
+        try {
+            if (dto.getId() == null) settingService.create(dto);
+            else settingService.update(dto.getId(), dto);
+            ra.addFlashAttribute("success", "Lưu thành công");
+        } catch (InventoryException ex) {
+            ra.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/settings/" + dto.getType();
+    }
+
+    @GetMapping("/delete/{type}/{id}")
+    public String delete(@PathVariable SettingType type,
+                         @PathVariable Integer id,
+                         RedirectAttributes ra) {
         try {
             settingService.delete(id);
-            return ResponseEntity.ok(Map.of("message", "Xóa thành công"));
+            ra.addFlashAttribute("success", "Xóa thành công");
         } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
+            ra.addFlashAttribute("error", ex.getMessage());
         }
-    }
-
-    // Lấy theo ID → GET /api/settings/{id}
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(settingService.getById(id));
-        } catch (InventoryException ex) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", ex.getMessage()));
-        }
-    }
-
-    // Lấy tất cả → GET /api/settings
-    @GetMapping
-    public ResponseEntity<List<SettingDTO>> getAll() {
-        return ResponseEntity.ok(settingService.getAll());
-    }
-
-    // Lấy theo type → GET /api/settings/type/{type}
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<SettingDTO>> getByType(@PathVariable SettingType type) {
-        return ResponseEntity.ok(settingService.getByType(type));
+        return "redirect:/settings/" + type;
     }
 }

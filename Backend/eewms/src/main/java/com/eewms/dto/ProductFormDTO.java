@@ -8,7 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDetailsDTO {
+public class ProductFormDTO {
     private Integer id;
     private String code;
     private String name;
@@ -17,10 +17,8 @@ public class ProductDetailsDTO {
     private String description;
     private String status;
     private Integer quantity;
-
-    private SettingDTO unit;
-    private SettingDTO category;
-    private SettingDTO brand;
-
-    private List<ImageDTO> images;
+    private Integer unitId;
+    private Integer categoryId;
+    private Integer brandId;
+    private List<String> images;
 }
