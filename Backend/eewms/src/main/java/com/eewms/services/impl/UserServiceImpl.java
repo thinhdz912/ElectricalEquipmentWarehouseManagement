@@ -122,6 +122,10 @@
 
             return users.map(UserMapper::toDTO);
         }
+        @Override
+        public boolean existsByEmail(String email) {
+            return userRepository.existsByEmail(email);
+        }
 
 
     }
