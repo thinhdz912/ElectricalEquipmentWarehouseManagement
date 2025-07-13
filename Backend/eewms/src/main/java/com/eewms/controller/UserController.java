@@ -89,54 +89,6 @@ public class UserController {
         return "redirect:/admin/users";
     }
 
-    // 4. Hiển thị form sửa
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirect) {
-        try {
-            User user = userService.findUserById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng"));
-
-            UserDTO userDTO = UserMapper.toDTO(user);
-
-            model.addAttribute("userDTO", userDTO);
-            model.addAttribute("allRoles", userService.getAllRoles());
-
-            return "user-form";
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());
-            return "redirect:/admin/users";
-        }
-    }
-
-    // 5. Xử lý cập nhật user
-    @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Long id,
-                             @ModelAttribute("userDTO") UserDTO userDTO,
-                             RedirectAttributes redirect) {
-        try {
-            User updatedUser = UserMapper.toEntity(userDTO, roleRepository);
-            userService.updateUser(id, updatedUser);
-            redirect.addFlashAttribute("message", "Cập nhật người dùng thành công.");
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Lỗi khi cập nhật: " + e.getMessage());
-        }
-
-        return "redirect:/admin/users";
-    }
-
-    // 6. Xử lý xóa user
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            userService.deleteUser(id);
-            redirect.addFlashAttribute("message", "Xóa người dùng thành công.");
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Lỗi khi xóa: " + e.getMessage());
-        }
-
-        return "redirect:/admin/users";
-    }
-
     // 7. Bật / Tắt trạng thái
     @PostMapping("/{id}/toggle-status")
     public String toggleStatus(@PathVariable Long id, RedirectAttributes redirect) {

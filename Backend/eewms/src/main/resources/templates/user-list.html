@@ -172,22 +172,6 @@
         document.getElementById('userModal').classList.add('hidden');
     }
 
-    function openEditModal(anchor) {
-        const tr = anchor.closest('tr');
-        document.getElementById('editUserId').value = tr.dataset.id;
-        document.getElementById('editUsername').value = tr.dataset.username;
-        document.getElementById('editFullName').value = tr.dataset.fullname;
-        document.getElementById('editEmail').value = tr.dataset.email || "";
-        document.getElementById('editAddress').value = tr.dataset.address || "";
-        document.getElementById('editPhone').value = tr.dataset.phone || "";
-        document.getElementById('editRoleIds').value = tr.dataset.role;
-        document.getElementById('editUserForm').action = `/admin/users/update/${tr.dataset.id}`;
-        document.getElementById('editUserModal').classList.remove('hidden');
-    }
-
-    function closeEditModal() {
-        document.getElementById('editUserModal').classList.add('hidden');
-    }
     const btn = document.getElementById("userMenuBtn");
     const dropdown = document.getElementById("userMenuDropdown");
     btn?.addEventListener("click", () => {

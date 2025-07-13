@@ -52,36 +52,7 @@
             return userRepository.save(user);
         }
 
-        @Override
-        public User updateUser(Long id, User updatedUser) {
-            User existingUser = userRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            existingUser.setFullName(updatedUser.getFullName());
-            existingUser.setEnabled(updatedUser.isEnabled());
-            existingUser.setRoles(updatedUser.getRoles());
-
-            // Thêm cập nhật các trường mới
-            existingUser.setPhone(updatedUser.getPhone());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setAddress(updatedUser.getAddress());
-
-            // Nếu mật khẩu được nhập mới thì cập nhật
-            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
-                String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
-                existingUser.setPassword(encodedPassword);
-            }
-
-            return userRepository.save(existingUser);
-        }
-
-        @Override
-        public void deleteUser(Long id) {
-            if (!userRepository.existsById(id)) {
-                throw new IllegalArgumentException("User not found with ID: " + id);
-            }
-            userRepository.deleteById(id);
-        }
 
         @Override
         public void toggleEnabledStatus(Long id) {

@@ -20,10 +20,6 @@ public interface IUserService {
 
     User saveUser(User user);
 
-    User updateUser(Long id, User updatedUser);
-
-    void deleteUser(Long id);
-
     void toggleEnabledStatus(Long id);
 
     boolean existsByUsername(String username);
