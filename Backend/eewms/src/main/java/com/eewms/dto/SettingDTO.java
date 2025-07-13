@@ -1,23 +1,17 @@
 package com.eewms.dto;
 
+import com.eewms.constant.SettingType;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SettingDTO {
-
     private Integer id;
-
     private String name;
-
-    private Integer typeId; // Dùng enum SettingType.getValue()
-
+    private SettingType type;
     private Integer priority;
-
     private String description;
-
     private String status;
 }

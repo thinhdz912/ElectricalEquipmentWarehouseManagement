@@ -1,5 +1,5 @@
-<!-- fragments/header.html -->
-<header class="bg-white shadow-sm p-4 flex justify-between items-center" th:fragment="header">
+
+<header th:fragment="header" class="bg-white shadow-sm p-4 flex justify-between items-center">
     <!-- Search Bar -->
     <div class="relative w-full max-w-md">
         <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -7,19 +7,45 @@
     </div>
 
     <!-- User Menu -->
-    <div class="flex items-center space-x-4">
-        <button class="p-2 rounded-full hover:bg-gray-100">
-            <i class="ri-notification-3-line text-xl text-gray-600"></i>
-        </button>
-        <button class="p-2 rounded-full hover:bg-gray-100">
-            <img src="https://placehold.co/32x32/e2e8f0/e2e8f0" alt="Country Flag" class="w-6 h-6 rounded-full object-cover">
-        </button>
-        <div class="flex items-center space-x-2">
-            <img src="https://placehold.co/40x40/7e22ce/ffffff?text=U" alt="User Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500">
-            <div class="hidden md:block">
-                <p class="font-semibold text-sm">Người dùng</p>
-                <p class="text-xs text-gray-500">Admin</p>
+    <div class="ms-auto relative" id="userMenuWrapper">
+        <!-- Nút avatar -->
+        <button id="userMenuBtn"
+                class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 focus:outline-none">
+            <img th:src="${(loggedInAvatarUrl != null and !#strings.isEmpty(loggedInAvatarUrl))
+                ? loggedInAvatarUrl + '?t=' + avatarTimestamp
+                : 'https://placehold.co/40x40?text=User'}"
+
+                 alt="Avatar"
+                 class="w-10 h-10 rounded-full object-cover border-2 border-blue-500">
+
+
+            <div class="hidden md:block text-left">
+                <p class="font-semibold text-sm" th:text="${#authentication.name}">Người dùng</p>
+                <p class="text-xs text-gray-500"
+                   th:switch="${#authentication.authorities[0].authority}">
+                    <span th:case="'ROLE_ADMIN'">Admin</span>
+                    <span th:case="'ROLE_MANAGER'">Manager</span>
+                    <span th:case="'ROLE_STAFF'">Staff</span>
+                    <span th:case="'ROLE_GUEST'">Guest</span>
+                    <span th:case="*">Unknown</span>
+                </p>
             </div>
+        </button>
+
+        <!-- Dropdown menu (ẩn mặc định) -->
+        <div id="userMenuDropdown"
+             class="hidden absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg z-20">
+            <a th:href="@{/account/info}"
+               class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+               Thông tin tài khoản
+            </a>
+            <div class="border-t border-gray-200"></div>
+            <form th:action="@{/logout}" method="post" th:csrf="true">
+                <button type="submit"
+                        class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    Đăng xuất
+                </button>
+            </form>
         </div>
     </div>
 </header>

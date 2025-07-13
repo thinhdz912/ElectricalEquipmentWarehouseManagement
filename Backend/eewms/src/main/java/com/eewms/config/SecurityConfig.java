@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,14 +21,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                // ✅ Bật lại CSRF và dùng Cookie để cấp token ngay cả khi chưa login
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
+
+                // ✅ Cấu hình phân quyền
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login").permitAll()
+                        // Cho phép public các đường dẫn cần thiết
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/activate", "/activate/**").permitAll()
+
+                        // Các endpoint yêu cầu login / phân quyền
+                        .requestMatchers("/account/info", "/account/update-profile").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/staff/**").hasAnyRole("ADMIN", "MANAGER", "STAFF")
+
+                        // Tất cả yêu cầu khác phải xác thực
                         .anyRequest().authenticated()
                 )
+
+                // ✅ Cấu hình login form
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/do-login")
@@ -35,13 +49,16 @@ public class SecurityConfig {
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
+
+                // ✅ Logout
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // dùng API mới thay vì AntPathRequestMatcher
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
+
                 .userDetailsService(userDetailsService);
 
         return http.build();
@@ -49,7 +66,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // dùng cho mã hóa mật khẩu
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -57,55 +74,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-
-
-//import lombok.RequiredArgsConstructor;
-//import org.modelmapper.ModelMapper;
-//import org.springframework.context.annotation.*;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.web.servlet.config.annotation.*;
-//
-//@Configuration
-//@EnableWebSecurity
-//@RequiredArgsConstructor
-//public class SecurityConfig implements WebMvcConfigurer {
-//
-//
-//    @Value("${jwt.signerKey}")
-//    private String signerKey;
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .sessionManagement(sm ->
-//                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .requestMatchers("/api/settings/**").permitAll()
-//                        .anyRequest().authenticated()
-//                );
-//        http.oauth2ResourceServer(oauth2 ->
-//                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())));
-//
-//        http.csrf(AbstractHttpConfigurer::disable);
-//        return http.build();
-//    }
-//    @Bean
-//    JwtDecoder jwtDecoder(){
-//        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(),"HS256");
-//        return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS256)
-//                .build();
-//    }
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        return new ModelMapper();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//}
