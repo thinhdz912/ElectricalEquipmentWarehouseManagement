@@ -113,4 +113,25 @@ public class UserController {
 
         return "redirect:/admin/users";
     }
+
+    //8. reset password
+    @PostMapping("/reset-password/{id}")
+    public String resetPassword(@PathVariable Long id, RedirectAttributes redirect) {
+        try {
+            User user = userService.findUserById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng."));
+
+            // Tạo token mới
+            String token = verificationTokenService.createVerificationToken(user);
+
+            // Gửi email đặt lại mật khẩu
+            emailService.sendResetPasswordEmail(user, token);
+
+            redirect.addFlashAttribute("message", "Đã gửi email đặt lại mật khẩu cho người dùng.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Lỗi khi gửi email đặt lại mật khẩu: " + e.getMessage());
+        }
+
+        return "redirect:/admin/users";
+    }
 }
